@@ -100,7 +100,8 @@ const tex = {
     return exprs.join(" + ");
   },
   pow: function (base, expo) {
-    if (base.length > 4) { // magic number
+    if (base.length > 4) {
+      // magic number
       return this.wrap(base) + tex.high(expo);
     }
     return base + tex.high(expo);
@@ -219,17 +220,17 @@ export default tex;
 
 let __name__ = "__main__";
 if (__name__ == "__main__") {
-// Examples from: https://cns-guide.sfc.keio.ac.jp/2001/11/4/1
-let sqsum = tex.sum(
-  tex.square(tex.div("dx", "dt")),
-  tex.square(tex.div("dy", "dt")),
-);
-let complex_int = tex.integral("t", new Range("a", "b"), tex.root(sqsum));
+  // Examples from: https://cns-guide.sfc.keio.ac.jp/2001/11/4/1
+  let sqsum = tex.sum(
+    tex.square(tex.div("dx", "dt")),
+    tex.square(tex.div("dy", "dt")),
+  );
+  let complex_int = tex.integral("t", new Range("a", "b"), tex.root(sqsum));
 
-writeFileSync(
-  "output.tex",
-  tex.document(
-    `
+  writeFileSync(
+    "output.tex",
+    tex.document(
+      `
 ${tex.inline("x = a")} から ${tex.inline("x = b")}までの ${tex.inline("f(x)")} の積分は、
 ${tex.display(
   tex.equal(
@@ -247,47 +248,50 @@ ${tex.display(
 )}
 と置き換えて考えることができる。`,
 
-    `分数の出力には${tex.verb("\\frac")}コマンドを用います。インライン数式モードでは${tex.inline(tex.equal("y", tex.div("1", "x + 1")))}のように出力されます。
+      `分数の出力には${tex.verb("\\frac")}コマンドを用います。インライン数式モードでは${tex.inline(tex.equal("y", tex.div("1", "x + 1")))}のように出力されます。
   一方ディスプレイ数式モードでは
   ${tex.display(tex.equal("y", tex.div("1", "x + 1")))} のように出力されます。`,
 
-    `根号の出力には${tex.verb("\\sqrt")}コマンドを用います。
+      `根号の出力には${tex.verb("\\sqrt")}コマンドを用います。
       
  インライン数式モードでは${tex.inline(complex_int)}と出力されます。一方ディスプレイ数式モードでは${tex.display(complex_int)}のように出力されます。
     
 オプション引数をとると${tex.inline(tex.equal(tex.root(27, 3), 3))}のようになります。`,
 
-    `積分記号の出力には${tex.verb("\\int")}コマンドを用います。
+      `積分記号の出力には${tex.verb("\\int")}コマンドを用います。
 インライン数式モードでは
 ${tex.inline(tex.integral("x", new Range("a", "b"), "f(x)"))}のように出力されます。一方ディスプレイ数式モードでは
 ${tex.display(tex.integral("x", new Range("a", "b"), "f(x)"))}のように出力されます。`,
 
-    tex.display(
-      tex.array2d([
-        ["1", "2", tex.cdots, "n"],
-        ["2", "4", tex.cdots, "2n"],
-        [tex.vdots, tex.vdots, tex.ddots, tex.vdots],
-        ["m", tex.mul_dot("m", 2), tex.cdots, tex.mul_dot("m", "n")],
+      tex.display(
+        tex.array2d([
+          ["1", "2", tex.cdots, "n"],
+          ["2", "4", tex.cdots, "2n"],
+          [tex.vdots, tex.vdots, tex.ddots, tex.vdots],
+          ["m", tex.mul_dot("m", 2), tex.cdots, tex.mul_dot("m", "n")],
         ]),
-    ),
-    `左側が通常の例、右側が${tex.verb("\\mathstrut")}を用いた例です。
+      ),
+      `左側が通常の例、右側が${tex.verb("\\mathstrut")}を用いた例です。
 ${tex.display(
   tex.sum(...["a", "b", "c", "d", "e", "f"].map(tex.vec_single)),
   tex.space_l.repeat(6),
   tex.sum(...tex.vec_many("a", "b", "c", "d", "e", "f")),
 )}`,
-    // 上下線括弧は理解が追い付かなかったのでまだやってないです。
-    `数式では式の左辺と右辺の関係を否定するために\`\`/''を用いることがあります．これには${tex.verb("\\not")}コマンドを否定したい記号の直前に記述します．出力例を次に示します。
+      // 上下線括弧は理解が追い付かなかったのでまだやってないです。
+      `数式では式の左辺と右辺の関係を否定するために\`\`/''を用いることがあります．これには${tex.verb("\\not")}コマンドを否定したい記号の直前に記述します．出力例を次に示します。
 ${tex.display(tex.triangle("A"), tex.not(tex.teq), tex.triangle("B"))}`,
 
-    `これらの空白制御コマンドの出力例を次に示します。
+      `これらの空白制御コマンドの出力例を次に示します。
 ${tex.display(tex.int + tex.integral("x", new Range("G", ""), "f(x, y)") + "dy")}
 ${tex.display(tex.area_integral(["x", "y"], "G", "f(x, y)"))}`,
-    tex.display(
-      tex.equal(tex.sigma("k", new Range(1, "n"), "k"), tex.div("n(n + 1)", 2)),
+      tex.display(
+        tex.equal(
+          tex.sigma("k", new Range(1, "n"), "k"),
+          tex.div("n(n + 1)", 2),
+        ),
+      ),
     ),
-  ),
-);
+  );
 }
 // i'm doing text-based interface rn, but it may be possible to rewrite it in an original object-based interface for better writing experience (I don't want to do that in JS tho)
 // e.g.:
