@@ -1,0 +1,9 @@
+# ignore generated files
+output.aux
+output.dvi
+output.log
+output.pdf
+output.tex
+
+# node_modules
+./node_modules
